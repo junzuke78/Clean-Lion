@@ -26,6 +26,10 @@
             android:name="com.example.joelg.lion.JobManagerActivity"
             android:label="@string/title_activity_job_manager"
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
+        <activity
+            android:name="com.example.joelg.lion.CameraActivity"
+            android:label="@string/title_activity_camera"
+            android:theme="@style/NoActionBar"></activity>
     </application>
 
 </manifest>
