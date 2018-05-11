@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">CLAPP</string>
+    <string name="title_activity_new_job_activiy">NewJobActiviy</string>
+    <string name="title_activity_job">JobActivity</string>
+    <string name="New_Job">New Job</string>
+    <string name="title_activity_job_manager">Job Manager</string>
+</resources>
