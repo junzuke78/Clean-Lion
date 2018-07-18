@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.joelg.lion.CameraActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppBarOverlay">
+
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="79dp"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
+        android:background="#000000"
+        app:popupTheme="@style/PopupOverlay" />
+
+    <ImageButton
+        android:id="@+id/GalleryBtn"
+        android:layout_width="88dp"
+        android:layout_height="76dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="32dp"
+        android:background="@android:drawable/ic_menu_gallery"
+        android:visibility="visible" />
+
+    <ImageButton
+        android:id="@+id/BackCamBtn"
+        android:layout_width="88dp"
+        android:layout_height="76dp"
+        android:layout_alignParentBottom="true"
+        android:background="@android:color/transparent"
+        android:src="@android:drawable/ic_menu_revert" />
+
+    <ImageButton
+        android:id="@+id/CaptureBtn"
+        android:layout_width="85dp"
+        android:layout_height="85dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="47dp"
+        android:adjustViewBounds="false"
+        android:background="@drawable/dimshapes"
+        android:src="@android:drawable/presence_invisible"
+        android:visibility="visible" />
+
+    <TextureView
+        android:id="@+id/texture"
+        android:layout_width="match_parent"
+        android:layout_height="530dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true">
+
+    </TextureView>
+
+</RelativeLayout>
