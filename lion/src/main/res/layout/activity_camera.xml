@@ -16,49 +16,56 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="79dp"
+        android:layout_height="76dp"
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom"
         android:background="#000000"
+        android:elevation="10dp"
         app:popupTheme="@style/PopupOverlay" />
 
     <ImageButton
         android:id="@+id/GalleryBtn"
-        android:layout_width="88dp"
-        android:layout_height="76dp"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginEnd="32dp"
+        android:layout_marginEnd="38dp"
         android:background="@android:drawable/ic_menu_gallery"
+        android:elevation="10dp"
+        android:scaleType="centerCrop"
         android:visibility="visible" />
 
     <ImageButton
         android:id="@+id/BackCamBtn"
-        android:layout_width="88dp"
-        android:layout_height="76dp"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
         android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="38dp"
         android:background="@android:color/transparent"
+        android:elevation="10dp"
+        android:scaleType="centerCrop"
         android:src="@android:drawable/ic_menu_revert" />
 
     <ImageButton
         android:id="@+id/CaptureBtn"
         android:layout_width="85dp"
         android:layout_height="85dp"
+        android:layout_above="@id/texture"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="47dp"
         android:adjustViewBounds="false"
         android:background="@drawable/dimshapes"
+        android:elevation="10dp"
         android:src="@android:drawable/presence_invisible"
         android:visibility="visible" />
 
     <TextureView
         android:id="@+id/texture"
         android:layout_width="match_parent"
-        android:layout_height="530dp"
+        android:layout_height="match_parent"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true">
-
-    </TextureView>
+        android:layout_alignParentTop="true" />
 
 </RelativeLayout>

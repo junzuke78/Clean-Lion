@@ -32,12 +32,12 @@ import java.util.List;
  * ---
  */
 
-public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> {
+public class JobAdapter extends RecyclerView.Adapter<JobAdapter.MyViewHolder> {
 
     private List<Task> TaskList;
 
 
-    public TaskAdapter(List<Task> taskList) {
+    public JobAdapter(List<Task> taskList) {
         TaskList = taskList;
     }
 

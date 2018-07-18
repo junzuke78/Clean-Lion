@@ -13,18 +13,17 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="45dp"
         android:background="@drawable/selector"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/job_title"
             android:layout_width="218dp"
-            android:layout_height="23dp"
+            android:layout_height="32dp"
             android:layout_marginBottom="-14dp"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
-            android:layout_marginStart="15dp"
             android:layout_marginTop="6dp"
             android:ellipsize="end"
             android:text="Example"

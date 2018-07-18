@@ -29,6 +29,7 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
+
     })
     implementation 'org.greenrobot:greendao:3.2.2'
     implementation 'com.android.support:appcompat-v7:26.1.0'

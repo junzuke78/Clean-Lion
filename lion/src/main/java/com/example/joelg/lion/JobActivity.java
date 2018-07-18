@@ -39,8 +39,8 @@ public class JobActivity extends AppCompatActivity {
         User user = daoSession.getUserDao().load(1L);
         final List<Task> jobList = (( Lion ) getApplication()).getDaoSession().getTaskDao().loadAll();
         Log.d("DEBUG_RV", "Loaded itms : " + jobList.size());
-        TaskAdapter TaskAdapter = new TaskAdapter(jobList);
-        RV.setAdapter(TaskAdapter);
+        JobAdapter JobAdapter = new JobAdapter(jobList);
+        RV.setAdapter(JobAdapter);
 
 
         final ImageButton CameraButton = findViewById(R.id.CameraBtn);
