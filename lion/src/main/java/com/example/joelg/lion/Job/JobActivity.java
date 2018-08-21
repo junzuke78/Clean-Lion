@@ -1,4 +1,4 @@
-package com.example.joelg.lion;
+package com.example.joelg.lion.Job;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +10,10 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.example.joelg.lion.Camera.CameraActivity;
+import com.example.joelg.lion.R;
+import com.example.joelg.lion.Task;
+import com.example.joelg.lion.User;
 import com.example.joelg.lion.db.DaoSession;
 
 import java.util.List;

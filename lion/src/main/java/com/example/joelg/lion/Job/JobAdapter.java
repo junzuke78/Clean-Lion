@@ -1,4 +1,4 @@
-package com.example.joelg.lion;
+package com.example.joelg.lion.Job;
 
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -10,6 +10,8 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
+import com.example.joelg.lion.R;
+import com.example.joelg.lion.Task;
 import com.example.joelg.lion.db.DaoSession;
 
 import java.text.SimpleDateFormat;

@@ -1,7 +1,9 @@
-package com.example.joelg.lion;
+package com.example.joelg.lion.Job;
 
 import android.app.Application;
 
+import com.example.joelg.lion.Task;
+import com.example.joelg.lion.User;
 import com.example.joelg.lion.db.DaoMaster;
 import com.example.joelg.lion.db.DaoSession;
 
