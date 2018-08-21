@@ -44,7 +44,6 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ImageVie
     public ImageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.gallery_card_layout, parent, false);
-
         return new ImageViewHolder(itemView);
 
     }
@@ -78,6 +77,8 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ImageVie
         private Long id;
         private CardView cv;
         private ImageView imgView;
+        private int Time;
+        
 
         public ImageViewHolder(View view) {
             super(view);

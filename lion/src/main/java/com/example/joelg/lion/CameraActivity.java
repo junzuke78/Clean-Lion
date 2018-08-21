@@ -44,14 +44,36 @@ import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 
 public class CameraActivity extends AppCompatActivity {
     private static final String TAG = "AndroidCameraApi";
     private TextureView textureView;
     private ImageButton takePictureButton;
+    private final CameraDevice.StateCallback stateCallback = new CameraDevice.StateCallback() {
+        @Override
+        public void onOpened(CameraDevice camera) {
+            Log.e(TAG, "onOpened");
+            cameraDevice = camera;
+            createCameraPreview();
+
+        }
+
+        @Override
+        public void onDisconnected(CameraDevice camera) {
+            cameraDevice.close();
+        }
+
+        @Override
+        public void onError(CameraDevice camera, int error) {
+            cameraDevice.close();
+            cameraDevice = null;
+        }
+    };
+    Date currentTime = Calendar.getInstance().getTime();
     private static final SparseIntArray ORIENTATONS = new SparseIntArray();
 
     static {
@@ -64,68 +86,8 @@ public class CameraActivity extends AppCompatActivity {
     private String cameraId;
     protected CameraDevice cameraDevice;
     protected CameraCaptureSession cameraCaptureSessions;
-    protected CaptureRequest captureRequest;
     protected CaptureRequest.Builder captureRequestBuilder;
     private Size imageDimension;
-    private ImageReader imageReader;
-
-    //save file
-    private File file;
-    private static final int REQUEST_CAMERA_PERMISSION = 200;
-    private boolean mFlashSupported;
-    private Handler mBackgroundHandler;
-    private HandlerThread mBackgroundThread;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_camera);
-        textureView = findViewById(R.id.texture);
-        assert textureView != null;
-        textureView.setSurfaceTextureListener(textureListener);
-        takePictureButton = findViewById(R.id.CaptureBtn);
-        assert takePictureButton != null;
-        takePictureButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                takePicture();
-            }
-        });
-
-
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-//################################################
-        final ImageButton BackButton = findViewById(R.id.BackCamBtn);
-        BackButton.setOnClickListener(new View.OnClickListener()
-
-        {
-
-            @Override
-            public void onClick(View v) {
-                {
-                    // Intent intent = new Intent()
-                    finish();
-                }
-            }
-        });
-        //#######################################
-        final ImageButton GalleryButton = findViewById(R.id.GalleryBtn);
-        BackButton.setOnClickListener(new View.OnClickListener()
-
-        {
-
-            @Override
-            public void onClick(View v) {
-                {
-                    Intent intent = new Intent(CameraActivity.this, GalleryActivity.class);
-                    startActivity(intent);
-                }
-            }
-        });
-    }
-
-
     TextureView.SurfaceTextureListener textureListener = new TextureView.SurfaceTextureListener() {
         @Override
         public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
@@ -145,28 +107,67 @@ public class CameraActivity extends AppCompatActivity {
         public void onSurfaceTextureUpdated(SurfaceTexture surface) {
         }
     };
+    //save file
+    private File file;
+    private static final int REQUEST_CAMERA_PERMISSION = 200;
+    private boolean mFlashSupported;
+    private Handler mBackgroundHandler;
+    private HandlerThread mBackgroundThread;
+    private int CameraWidth = 640;
+    private int CameraHeight = 480;
 
-    private final CameraDevice.StateCallback stateCallback = new CameraDevice.StateCallback() {
-        @Override
-        public void onOpened(CameraDevice camera) {
-            Log.e(TAG, "onOpened");
-            cameraDevice = camera;
-            createCameraPreview();
-        }
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
 
-        @Override
-        public void onDisconnected(CameraDevice camera) {
-            cameraDevice.close();
-        }
+        startBackgroundThread();
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_camera);
+        textureView = findViewById(R.id.texture);
+        assert textureView != null;
+        textureView.setSurfaceTextureListener(textureListener);
+        takePictureButton = findViewById(R.id.CaptureBtn);
+        assert takePictureButton != null;
+        takePictureButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                takePicture();
+            }
+        });
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+//################################################
+        final ImageButton BackButton = findViewById(R.id.BackCamBtn);
+        BackButton.setOnClickListener(new View.OnClickListener()
 
-        @Override
-        public void onError(CameraDevice camera, int error) {
-            cameraDevice.close();
-            cameraDevice = null;
-        }
-    };
+        {
+
+            @Override
+            public void onClick(View v) {
+                {
+
+                }
+            }
+        });
+        //#######################################
+        final ImageButton GalleryButton = findViewById(R.id.GalleryBtn);
+        GalleryButton.setOnClickListener(new View.OnClickListener()
+
+        {
+
+            @Override
+            public void onClick(View v) {
+                {
+                    //onPause();
+                    Intent intent = new Intent(CameraActivity.this, GalleryActivity.class);
+                    startActivity(intent);
+
+                }
+            }
+        });
+    }
 
     protected void takePicture() {
+
         if (null == cameraDevice) {
             Log.e(TAG, "cameraDevice is null");
             return;
@@ -179,13 +180,14 @@ public class CameraActivity extends AppCompatActivity {
                 jpegSizes = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP)
                         .getOutputSizes(ImageFormat.JPEG);
             }
-            int width = 640;
-            int height = 480;
+            int width = CameraWidth;
+            int height = CameraHeight;
             if (jpegSizes != null && 0 < jpegSizes.length) {
                 width = jpegSizes[0].getWidth();
                 height = jpegSizes[0].getHeight();
             }
             final ImageReader reader = ImageReader.newInstance(width, height, ImageFormat.JPEG, 1);
+
             List<Surface> outputSurface = new ArrayList<>(2);
             outputSurface.add(reader.getSurface());
             outputSurface.add(new Surface(textureView.getSurfaceTexture()));
@@ -198,7 +200,8 @@ public class CameraActivity extends AppCompatActivity {
             int rotation = getWindowManager().getDefaultDisplay().getRotation();
             captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, ORIENTATONS.get(rotation));
 
-            file = new File(Environment.getExternalStorageDirectory() + "/" + UUID.randomUUID().toString() + ".jpg");
+            file = new File(Environment.getExternalStorageDirectory() + "/" + currentTime + ".jpg");
+
             ImageReader.OnImageAvailableListener readerListener = new ImageReader.OnImageAvailableListener() {
                 @Override
                 public void onImageAvailable(ImageReader imageReader) {
@@ -341,7 +344,6 @@ public class CameraActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        startBackgroundThread();
         if (textureView.isAvailable())
             openCamera();
         else
@@ -352,7 +354,9 @@ public class CameraActivity extends AppCompatActivity {
     protected void onPause() {
         stopBackgroundThread();
         super.onPause();
+
     }
+
 
     private void stopBackgroundThread() {
         mBackgroundThread.quitSafely();
