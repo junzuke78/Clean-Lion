@@ -7,10 +7,11 @@ import com.example.joelg.lion.User;
 import com.example.joelg.lion.db.DaoMaster;
 import com.example.joelg.lion.db.DaoSession;
 
+
 /**
+
  * Created by joelg on 20/11/2017.
  */
-
 
 //singleton
 public class Lion extends Application {

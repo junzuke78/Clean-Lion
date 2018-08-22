@@ -59,7 +59,7 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.MyViewHolder> {
         holder.tasktitle.setText(task.getTitle() + "");
         holder.IsDone.setText(task.getIsDone() + "");
         holder.Tstamp.setText(task.getTimeStamp() + "");
-        holder.id = task.getId();
+        holder.id = task.getJobId();
 
     }
 
