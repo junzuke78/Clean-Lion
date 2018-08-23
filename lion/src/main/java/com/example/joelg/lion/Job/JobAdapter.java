@@ -1,4 +1,4 @@
-package com.example.joelg.lion;
+package com.example.joelg.lion.Job;
 
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -10,6 +10,8 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
+import com.example.joelg.lion.R;
+import com.example.joelg.lion.Task;
 import com.example.joelg.lion.db.DaoSession;
 
 import java.text.SimpleDateFormat;
@@ -57,7 +59,7 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.MyViewHolder> {
         holder.tasktitle.setText(task.getTitle() + "");
         holder.IsDone.setText(task.getIsDone() + "");
         holder.Tstamp.setText(task.getTimeStamp() + "");
-        holder.id = task.getId();
+        holder.id = task.getJobId();
 
     }
 

@@ -1,4 +1,4 @@
-package com.example.joelg.lion;
+package com.example.joelg.lion.Camera;
 
 import android.Manifest;
 import android.content.Context;
@@ -33,6 +33,9 @@ import android.view.TextureView;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
+
+import com.example.joelg.lion.Gallery.GalleryActivity;
+import com.example.joelg.lion.R;
 
 import org.greenrobot.greendao.annotation.NotNull;
 
@@ -157,6 +160,7 @@ public class CameraActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 {
+
                     //onPause();
                     Intent intent = new Intent(CameraActivity.this, GalleryActivity.class);
                     startActivity(intent);
