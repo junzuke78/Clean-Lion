@@ -11,6 +11,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.joelg.lion.Camera.CameraActivity;
+import com.example.joelg.lion.NotesActivity;
 import com.example.joelg.lion.R;
 import com.example.joelg.lion.Task;
 import com.example.joelg.lion.User;
@@ -51,20 +52,16 @@ public class JobActivity extends AppCompatActivity {
         CameraButton.setOnClickListener(new View.OnClickListener()
 
         {
-
             @Override
             public void onClick(View v) {
                 {
-
                     Intent intent = new Intent(JobActivity.this, CameraActivity.class);
                     startActivity(intent);
-
 
                 }
 
             }
         });
-
 
         final ImageButton BackButton = findViewById(R.id.JobBackBtn);
         BackButton.setOnClickListener(new View.OnClickListener()
@@ -74,9 +71,20 @@ public class JobActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 {
-
                     finish();
+                }
 
+            }
+        });
+
+        final ImageButton NotesButton = findViewById(R.id.noteBtn);
+        NotesButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                {
+                    Intent intent = new Intent(JobActivity.this, NotesActivity.class);
+                    startActivity(intent);
                 }
 
             }

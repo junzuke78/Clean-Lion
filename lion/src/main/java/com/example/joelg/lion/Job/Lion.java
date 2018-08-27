@@ -17,19 +17,34 @@ import com.example.joelg.lion.db.DaoSession;
 public class Lion extends Application {
 
     private DaoSession mDaoSession;
+    private DaoSession mDaoGlobal;
+
 
     @Override
     public void onCreate() {
         super.onCreate();
         mDaoSession = new DaoMaster(
-                new DaoMaster.DevOpenHelper(this, "CleanList.db").getWritableDb()).newSession();
+
+                new DaoMaster.DevOpenHelper(this, "JobManagerList.db").getWritableDb()).newSession();
+        //          | | |
+        //JOEL THIS \/\/\/ NEEDS TO BE MOVED PLEASE FIX DaoGlobal TO ITS OWN FILE FOR SIMPLICITY ?!?!?!?
+        new DaoMaster.DevOpenHelper(this, "JobList.db").getWritableDb();
+        new DaoMaster.DevOpenHelper(this, "ImgList.db").getWritableDb();
+
+
+
 
         // USER CREATION
         if (mDaoSession.getUserDao().loadAll().size() == 0) {
             mDaoSession.getUserDao().insert(new User(1L, "", "", ""));
             //JOB CREATION FOR DEMO PURPOSE
-
         }
+
+        /// Image DB Creation
+        if (mDaoSession.getImgStoreDao().loadAll().size() == 0) {
+            mDaoSession.getImgStoreDao().insert(new ImgStore("", "", "", 1L));
+        }
+
 
         if (mDaoSession.getTaskDao().loadAll().size() == 0) {
             mDaoSession.getTaskDao().insert(new Task("Empty bin and replace liner thats nice", 0, "", 1L));
@@ -44,6 +59,8 @@ public class Lion extends Application {
     public DaoSession getDaoSession() {
         return mDaoSession;
     }
+
+
 }
 
 

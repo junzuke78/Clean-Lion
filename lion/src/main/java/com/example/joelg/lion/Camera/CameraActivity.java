@@ -35,7 +35,11 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.example.joelg.lion.Gallery.GalleryActivity;
+import com.example.joelg.lion.Job.ImgStore;
+import com.example.joelg.lion.Job.JobActivity;
+import com.example.joelg.lion.Job.Lion;
 import com.example.joelg.lion.R;
+import com.example.joelg.lion.db.DaoSession;
 
 import org.greenrobot.greendao.annotation.NotNull;
 
@@ -56,6 +60,18 @@ public class CameraActivity extends AppCompatActivity {
     private static final String TAG = "AndroidCameraApi";
     private TextureView textureView;
     private ImageButton takePictureButton;
+    private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
+
+
+    Date currentTime = Calendar.getInstance().getTime();
+
+    static {
+        ORIENTATIONS.append(Surface.ROTATION_0, 90);
+        ORIENTATIONS.append(Surface.ROTATION_90, 0);
+        ORIENTATIONS.append(Surface.ROTATION_180, 270);
+        ORIENTATIONS.append(Surface.ROTATION_270, 180);
+    }
+
     private final CameraDevice.StateCallback stateCallback = new CameraDevice.StateCallback() {
         @Override
         public void onOpened(CameraDevice camera) {
@@ -68,6 +84,7 @@ public class CameraActivity extends AppCompatActivity {
         @Override
         public void onDisconnected(CameraDevice camera) {
             cameraDevice.close();
+            stopBackgroundThread();
         }
 
         @Override
@@ -76,15 +93,6 @@ public class CameraActivity extends AppCompatActivity {
             cameraDevice = null;
         }
     };
-    Date currentTime = Calendar.getInstance().getTime();
-    private static final SparseIntArray ORIENTATONS = new SparseIntArray();
-
-    static {
-        ORIENTATONS.append(Surface.ROTATION_0, 90);
-        ORIENTATONS.append(Surface.ROTATION_90, 0);
-        ORIENTATONS.append(Surface.ROTATION_180, 270);
-        ORIENTATONS.append(Surface.ROTATION_270, 180);
-    }
 
     private String cameraId;
     protected CameraDevice cameraDevice;
@@ -116,13 +124,14 @@ public class CameraActivity extends AppCompatActivity {
     private boolean mFlashSupported;
     private Handler mBackgroundHandler;
     private HandlerThread mBackgroundThread;
+    private HandlerThread DBThread;
     private int CameraWidth = 640;
     private int CameraHeight = 480;
+    private boolean mBuffer = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        startBackgroundThread();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
         textureView = findViewById(R.id.texture);
@@ -130,6 +139,17 @@ public class CameraActivity extends AppCompatActivity {
         textureView.setSurfaceTextureListener(textureListener);
         takePictureButton = findViewById(R.id.CaptureBtn);
         assert takePictureButton != null;
+        ///##############################################
+
+
+
+
+
+
+
+
+
+
         takePictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -138,19 +158,24 @@ public class CameraActivity extends AppCompatActivity {
         });
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-//################################################
+
+        //################################################
         final ImageButton BackButton = findViewById(R.id.BackCamBtn);
         BackButton.setOnClickListener(new View.OnClickListener()
 
         {
-
             @Override
             public void onClick(View v) {
                 {
+                    Intent intent = new Intent(CameraActivity.this, JobActivity.class);
+                    startActivity(intent);
+                    finish();
 
                 }
             }
         });
+
+
         //#######################################
         final ImageButton GalleryButton = findViewById(R.id.GalleryBtn);
         GalleryButton.setOnClickListener(new View.OnClickListener()
@@ -160,6 +185,7 @@ public class CameraActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 {
+
 
                     //onPause();
                     Intent intent = new Intent(CameraActivity.this, GalleryActivity.class);
@@ -171,6 +197,8 @@ public class CameraActivity extends AppCompatActivity {
     }
 
     protected void takePicture() {
+        HandlerThread handlerThread = new HandlerThread("take picture");
+        handlerThread.start();
 
         if (null == cameraDevice) {
             Log.e(TAG, "cameraDevice is null");
@@ -202,9 +230,19 @@ public class CameraActivity extends AppCompatActivity {
 
             //check oreintation
             int rotation = getWindowManager().getDefaultDisplay().getRotation();
-            captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, ORIENTATONS.get(rotation));
+            captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, ORIENTATIONS.get(rotation));
 
-            file = new File(Environment.getExternalStorageDirectory() + "/" + currentTime + ".jpg");
+            file = new File(Environment.getExternalStorageDirectory() + "/" + "users" + "/" + currentTime + ".jpg");
+
+
+            final DaoSession daoSession = (( Lion ) getApplication()).getDaoSession();
+            ImgStore image = daoSession.getImgStoreDao().load(1l);
+            Log.d("DEBUG_DB", "Loaded imgs :" + image.getImgURL());
+
+
+
+
+
 
             ImageReader.OnImageAvailableListener readerListener = new ImageReader.OnImageAvailableListener() {
                 @Override
@@ -238,11 +276,13 @@ public class CameraActivity extends AppCompatActivity {
                     } finally {
                         if (outputStream != null)
                             outputStream.close();
+                        //  handlerThread
 
                     }
                 }
 
             };
+
             reader.setOnImageAvailableListener(readerListener, mBackgroundHandler);
             final CameraCaptureSession.CaptureCallback captureListener = new CameraCaptureSession.CaptureCallback() {
                 @Override
@@ -250,6 +290,7 @@ public class CameraActivity extends AppCompatActivity {
                     super.onCaptureCompleted(session, request, result);
                     Toast.makeText(CameraActivity.this, "Saved" + file, Toast.LENGTH_SHORT).show();
                     createCameraPreview();
+
                 }
             };
             cameraDevice.createCaptureSession(outputSurface, new CameraCaptureSession.StateCallback() {
@@ -365,6 +406,7 @@ public class CameraActivity extends AppCompatActivity {
     private void stopBackgroundThread() {
         mBackgroundThread.quitSafely();
         try {
+
             mBackgroundThread.join();
             mBackgroundThread = null;
             mBackgroundThread = null;
@@ -374,13 +416,10 @@ public class CameraActivity extends AppCompatActivity {
 
     }
 
-    private void startBackgroundThread() {
-        mBackgroundThread = new HandlerThread("Camera Background");
-        mBackgroundThread.start();
-        mBackgroundHandler = new Handler(mBackgroundThread.getLooper());
-    }
 
 }
+
+
 
 
 
