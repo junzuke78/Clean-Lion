@@ -1,11 +1,16 @@
 package com.example.joelg.lion.Job;
 
 import android.app.Application;
+import android.os.HandlerThread;
+import android.text.format.Time;
+import android.widget.Toast;
 
 import com.example.joelg.lion.Task;
-import com.example.joelg.lion.User;
+import com.example.joelg.lion.db.User;
 import com.example.joelg.lion.db.DaoMaster;
 import com.example.joelg.lion.db.DaoSession;
+
+import java.io.IOException;
 
 
 /**
@@ -17,14 +22,18 @@ import com.example.joelg.lion.db.DaoSession;
 public class Lion extends Application {
 
     private DaoSession mDaoSession;
-    private DaoSession mDaoGlobal;
-
+    private HandlerThread DbHandler;
 
     @Override
     public void onCreate() {
+
+
+
+
+
+
         super.onCreate();
         mDaoSession = new DaoMaster(
-
                 new DaoMaster.DevOpenHelper(this, "JobManagerList.db").getWritableDb()).newSession();
         //          | | |
         //JOEL THIS \/\/\/ NEEDS TO BE MOVED PLEASE FIX DaoGlobal TO ITS OWN FILE FOR SIMPLICITY ?!?!?!?
@@ -33,10 +42,10 @@ public class Lion extends Application {
 
 
 
-
         // USER CREATION
         if (mDaoSession.getUserDao().loadAll().size() == 0) {
-            mDaoSession.getUserDao().insert(new User(1L, "", "", ""));
+            mDaoSession.getUserDao().insert(new User(1L, "Test", "", ""));
+
             //JOB CREATION FOR DEMO PURPOSE
         }
 
@@ -59,9 +68,19 @@ public class Lion extends Application {
     public DaoSession getDaoSession() {
         return mDaoSession;
     }
+       public void OnDestroyed(){
+        DbHandler.quitSafely();
+        Toast.makeText(this,"DbThread Distroyed",Toast.LENGTH_LONG).show();
+
+    }
 
 
 }
+
+
+
+
+
 
 
 

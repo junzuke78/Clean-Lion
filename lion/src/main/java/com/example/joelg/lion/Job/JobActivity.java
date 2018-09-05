@@ -14,7 +14,7 @@ import com.example.joelg.lion.Camera.CameraActivity;
 import com.example.joelg.lion.NotesActivity;
 import com.example.joelg.lion.R;
 import com.example.joelg.lion.Task;
-import com.example.joelg.lion.User;
+import com.example.joelg.lion.db.User;
 import com.example.joelg.lion.db.DaoSession;
 
 import java.util.List;
