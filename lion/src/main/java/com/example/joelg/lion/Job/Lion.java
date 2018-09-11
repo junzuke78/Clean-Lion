@@ -75,6 +75,16 @@ public class Lion extends Application {
     }
 
 
+
+
+
+       public void OnDestroyed(){
+        DbHandler.quitSafely();
+        Toast.makeText(this,"DbThread Distroyed",Toast.LENGTH_LONG).show();
+
+    }
+
+
 }
 
 
