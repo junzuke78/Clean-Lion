@@ -49,6 +49,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ImageVie
                 .inflate(R.layout.gallery_card_layout, parent, false);
         return new ImageViewHolder(itemView);
 
+
     }
 
     @Override
@@ -83,24 +84,16 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ImageVie
         private int Time;
         
 
-        public ImageViewHolder(View view) {
-            super(view);
+        public ImageViewHolder(View itemView) {
 
-            cv = itemView.findViewById(R.id.jm_cv);
+            super(itemView);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    final Intent intent;
-                    intent = new Intent(itemView.getContext(), JobActivity.class);
-                    itemView.getContext().startActivity(intent);
 
                 }
-            });
+
 
         }
 
     }
 
 
-}

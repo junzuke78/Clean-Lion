@@ -31,6 +31,7 @@ import android.util.SparseIntArray;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -97,8 +98,7 @@ public class CameraActivity extends AppCompatActivity implements Runnable {
             Log.e(TAG, "onOpened");
             cameraDevice = camera;
             createCameraPreview();
-            Thread CamThread = new Thread(new CameraActivity());
-            CamThread.start();
+
         }
 
         @Override
@@ -152,8 +152,8 @@ public class CameraActivity extends AppCompatActivity implements Runnable {
     private Handler mBackgroundHandler;
     private HandlerThread mBackgroundThread;
 
-    private int CameraWidth = 640;
-    private int CameraHeight = 480;
+    private int CameraWidth = 1440;
+    private int CameraHeight = 2960;
 
 
     @Override
@@ -164,6 +164,7 @@ public class CameraActivity extends AppCompatActivity implements Runnable {
         textureView = findViewById(R.id.texture);
         assert textureView != null;
         textureView.setSurfaceTextureListener(textureListener);
+        //ViewGroup.LayoutParams params = preview.getlayoutParams();
         takePictureButton = findViewById(R.id.CaptureBtn);
         assert takePictureButton != null;
 
@@ -239,7 +240,7 @@ public class CameraActivity extends AppCompatActivity implements Runnable {
                 width = jpegSizes[0].getWidth();
                 height = jpegSizes[0].getHeight();
             }
-            final ImageReader reader = ImageReader.newInstance(width, height, ImageFormat.JPEG, 1);
+            final ImageReader reader = ImageReader.newInstance(width, height, ImageFormat.JPEG, 10);
 
             List<Surface> outputSurface = new ArrayList<>(2);
             outputSurface.add(reader.getSurface());
@@ -252,6 +253,10 @@ public class CameraActivity extends AppCompatActivity implements Runnable {
             //check oreintation
             int rotation = getWindowManager().getDefaultDisplay().getRotation();
             captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, ORIENTATIONS.get(rotation));
+
+
+
+
 
 
             final DaoSession daoSession = (( Lion ) getApplication()).getDaoSession();
@@ -340,6 +345,7 @@ public class CameraActivity extends AppCompatActivity implements Runnable {
     private void createCameraPreview() {
         try {
             SurfaceTexture texture = textureView.getSurfaceTexture();
+
             assert texture != null;
             texture.setDefaultBufferSize(imageDimension.getWidth(), imageDimension.getHeight());
             Surface surface = new Surface(texture);
@@ -376,6 +382,9 @@ public class CameraActivity extends AppCompatActivity implements Runnable {
             e.printStackTrace();
         }
     }
+
+
+
 
     private void openCamera() {
         CameraManager manager = ( CameraManager ) getSystemService(Context.CAMERA_SERVICE);

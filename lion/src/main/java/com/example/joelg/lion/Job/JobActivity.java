@@ -24,6 +24,8 @@ public class JobActivity extends AppCompatActivity {
     public TextView TsView;
     private View.OnClickListener checkBoxListener;
 
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,8 +57,10 @@ public class JobActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 {
+
                     Intent intent = new Intent(JobActivity.this, CameraActivity.class);
                     startActivity(intent);
+
 
                 }
 
