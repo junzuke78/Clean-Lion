@@ -1,6 +1,7 @@
 package com.example.joelg.lion.Gallery;
 
 import android.content.Intent;
+import android.support.v7.view.menu.MenuView;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -10,7 +11,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.example.joelg.lion.Job.JobActivity;
+import com.example.joelg.lion.Job.Lion;
 import com.example.joelg.lion.R;
+import com.example.joelg.lion.db.DaoSession;
 
 import java.util.List;
 
@@ -32,9 +35,7 @@ import java.util.List;
 public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ImageViewHolder> {
 
     private List<String> ImageList;
-
     private OnItemClickListener mListener;
-
     public GalleryAdapter(List<String> imageList) {
         this.ImageList = imageList;
     }
@@ -43,11 +44,16 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ImageVie
         mListener = listener;
     }
 
+
+
+
     @Override
     public ImageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext())
+        View ImageView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.gallery_card_layout, parent, false);
-        return new ImageViewHolder(itemView);
+
+
+        return new ImageViewHolder(ImageView);
 
 
     }
@@ -60,10 +66,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ImageVie
 
     }
 
-    @Override
-    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
-        super.onAttachedToRecyclerView(recyclerView);
-    }
+
 
     @Override
     public int getItemCount() {
@@ -76,17 +79,33 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ImageVie
 
     }
 
+
+    @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+    }
+
+
     public class ImageViewHolder extends RecyclerView.ViewHolder {
 
         private Long id;
         private CardView cv;
         private ImageView imgView;
         private int Time;
-        
 
-        public ImageViewHolder(View itemView) {
 
-            super(itemView);
+
+
+        public ImageViewHolder(View ImageView) {
+            super(ImageView);
+
+            DaoSession daoSession = (( Lion ) itemView.getContext().getApplicationContext()).getDaoSession();
+
+            cv = imgView.findViewById(R.id.gallery_cv);
+
+
+
+            }
 
 
                 }
@@ -94,6 +113,6 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ImageVie
 
         }
 
-    }
+
 
 
