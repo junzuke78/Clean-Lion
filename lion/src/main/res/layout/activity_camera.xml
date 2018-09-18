@@ -4,9 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorBlack"
     tools:context="com.example.joelg.lion.Camera.CameraActivity">
 
     <android.support.v7.widget.Toolbar
+
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -22,8 +24,8 @@
         android:layout_width="55dp"
         android:layout_height="55dp"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="38dp"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="55dp"
         android:background="@android:drawable/ic_menu_gallery"
         android:elevation="10dp"
         android:scaleType="centerCrop"
@@ -34,12 +36,22 @@
         android:layout_width="55dp"
         android:layout_height="55dp"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="59dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="56dp"
         android:background="@android:color/transparent"
         android:elevation="10dp"
         android:scaleType="centerCrop"
         android:src="@android:drawable/ic_menu_revert" />
+
+    <TextureView
+        android:id="@+id/texture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="71dp" />
+
+
 
     <ImageButton
         android:id="@+id/CaptureBtn"
@@ -53,12 +65,4 @@
         android:elevation="10dp"
         android:src="@android:drawable/presence_invisible"
         android:visibility="visible" />
-
-    <TextureView
-        android:id="@+id/texture"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentStart="true"
-        android:layout_centerVertical="true" />
-
 </RelativeLayout>

@@ -33,7 +33,9 @@
         <activity
             android:name=".Camera.CameraActivity"
             android:label="@string/title_activity_camera"
-            android:theme="@style/NoActionBar" />
+            android:theme="@style/NoActionBar"
+            android:orientation="horizontal"/>
+
         <activity android:name=".Gallery.GalleryActivity" />
         <activity
             android:name=".NotesActivity"

@@ -3,6 +3,7 @@ package com.example.joelg.lion.Camera;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.ImageFormat;
 import android.graphics.SurfaceTexture;
@@ -160,6 +161,7 @@ public class CameraActivity extends AppCompatActivity implements Runnable {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_camera);
         textureView = findViewById(R.id.texture);
         assert textureView != null;
@@ -221,6 +223,7 @@ public class CameraActivity extends AppCompatActivity implements Runnable {
     protected void takePicture() {
         HandlerThread handlerThread = new HandlerThread("camera thread");
         handlerThread.start();
+        
 
         if (null == cameraDevice) {
             Log.e(TAG, "cameraDevice is null");
