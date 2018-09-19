@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.GridLayout;
 import android.widget.ImageView;
 
 import com.example.joelg.lion.Job.Lion;
@@ -38,12 +37,9 @@ public class GalleryActivity extends AppCompatActivity {
         ImageView GalleryImg = findViewById(R.id.GalleryImg);
         RecyclerView RVG = findViewById(R.id.g_rv);
         LinearLayoutManager LLM = new LinearLayoutManager(this);
-        GridLayout GGG = new GridLayout(this);
-
         RVG.setLayoutManager(LLM);
         RVG.setHasFixedSize(true);
 
-        GGG.getRowCount();
 
 
         imgView = new ImageView(this);
@@ -51,6 +47,7 @@ public class GalleryActivity extends AppCompatActivity {
         String tempImg = daoSession.toString();
         Uri imgUri = Uri.parse(tempImg);
         Picasso.get().load(imgUri).centerCrop().into(GalleryImg);
+
         Log.d("DEBUG_LION", "Job manager activated");
 
 
@@ -69,8 +66,6 @@ public class GalleryActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.d("DEBUG_LION", "Item selected :" + item.getItemId());
         switch (item.getItemId()) {
-
-
             default:
                 return super.onOptionsItemSelected(item);
         }

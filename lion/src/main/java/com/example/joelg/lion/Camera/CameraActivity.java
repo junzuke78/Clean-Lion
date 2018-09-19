@@ -32,7 +32,6 @@ import android.util.SparseIntArray;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -42,9 +41,7 @@ import com.example.joelg.lion.Job.JobActivity;
 import com.example.joelg.lion.Job.Lion;
 import com.example.joelg.lion.R;
 import com.example.joelg.lion.db.DaoSession;
-import com.example.joelg.lion.db.User;
 
-import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.NotNull;
 
 import java.io.File;
@@ -52,7 +49,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.URL;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -63,18 +59,8 @@ import java.util.List;
 
 public class CameraActivity extends AppCompatActivity implements Runnable {
     private static final String TAG = "AndroidCameraApi";
-    private TextureView textureView;
-    private ImageButton takePictureButton;
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
-    private String ImgUrl;
-
-
-    public void run(){
-        System.out.println("Thread Running");
-    }
-
-    Date currentTime = Calendar.getInstance().getTime();
-    String ImgTimeStamp = currentTime.toString();
+    private static final int REQUEST_CAMERA_PERMISSION = 200;
 
     static {
         ORIENTATIONS.append(Surface.ROTATION_0, 90);
@@ -83,16 +69,12 @@ public class CameraActivity extends AppCompatActivity implements Runnable {
         ORIENTATIONS.append(Surface.ROTATION_270, 180);
     }
 
-
-    private Long ImgID(){
-      long upperLimit = 15L;
-      long lowerLimit = 0L;
-
-      Long GeneratedID = lowerLimit + (long) (Math.random() * upperLimit - lowerLimit);
-      return GeneratedID;
-    }
-
-
+    protected CameraDevice cameraDevice;
+    protected CameraCaptureSession cameraCaptureSessions;
+    protected CaptureRequest.Builder captureRequestBuilder;
+    Date currentTime = Calendar.getInstance().getTime();
+    String ImgTimeStamp = currentTime.toString();
+    private TextureView textureView;
     private final CameraDevice.StateCallback stateCallback = new CameraDevice.StateCallback() {
         @Override
         public void onOpened(CameraDevice camera) {
@@ -104,11 +86,9 @@ public class CameraActivity extends AppCompatActivity implements Runnable {
 
         @Override
         public void onDisconnected(CameraDevice camera) {
-           Log.e(TAG, "On Disconnected");
+            Log.e(TAG, "On Disconnected");
             // cameraDevice.close();
-           // stopBackgroundThread();
-
-
+            // stopBackgroundThread();
 
 
         }
@@ -119,11 +99,8 @@ public class CameraActivity extends AppCompatActivity implements Runnable {
             cameraDevice = null;
         }
     };
-
-    private String cameraId;
-    protected CameraDevice cameraDevice;
-    protected CameraCaptureSession cameraCaptureSessions;
-    protected CaptureRequest.Builder captureRequestBuilder;
+    private ImageButton takePictureButton;
+    private String ImgUrl;
     private Size imageDimension;
     TextureView.SurfaceTextureListener textureListener = new TextureView.SurfaceTextureListener() {
         @Override
@@ -144,21 +121,32 @@ public class CameraActivity extends AppCompatActivity implements Runnable {
         public void onSurfaceTextureUpdated(SurfaceTexture surface) {
         }
     };
-
-
     //save file
     private File file;
-    private static final int REQUEST_CAMERA_PERMISSION = 200;
     private boolean mFlashSupported;
     private Handler mBackgroundHandler;
+    private String cameraId;
     private HandlerThread mBackgroundThread;
-
     private int CameraWidth = 1440;
     private int CameraHeight = 2960;
 
+    public void run() {
+        System.out.println("Thread Running");
+    }
+
+    private Long ImgID() {
+        long upperLimit = 15L;
+        long lowerLimit = 0L;
+
+        Long GeneratedID = lowerLimit + ( long ) (Math.random() * upperLimit - lowerLimit);
+        return GeneratedID;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        HandlerThread handlerThread = new HandlerThread("camera thread");
+        handlerThread.start();
 
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -194,7 +182,6 @@ public class CameraActivity extends AppCompatActivity implements Runnable {
                     startActivity(intent);
 
 
-
                 }
             }
         });
@@ -221,9 +208,7 @@ public class CameraActivity extends AppCompatActivity implements Runnable {
     }
 
     protected void takePicture() {
-        HandlerThread handlerThread = new HandlerThread("camera thread");
-        handlerThread.start();
-        
+
 
         if (null == cameraDevice) {
             Log.e(TAG, "cameraDevice is null");
@@ -258,19 +243,25 @@ public class CameraActivity extends AppCompatActivity implements Runnable {
             captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, ORIENTATIONS.get(rotation));
 
 
-
-
-
-
             final DaoSession daoSession = (( Lion ) getApplication()).getDaoSession();
             try {
-                file = new File(Environment.getExternalStorageDirectory() + "/" + "users" + "/" + ImgTimeStamp + ".jpg");
-                ImgUrl = file.getPath();
-                daoSession.getImgStoreDao();
-                daoSession.insert(new ImgStore("", ImgUrl, ImgTimeStamp,ImgID()));
+
+
+                file = new File(Environment.getExternalStorageDirectory() + ImgTimeStamp + ".jpg");
+                String FilePath = file.toString();
+                daoSession.insert(new ImgStore("", FilePath, ImgTimeStamp, ImgID()));
                 Toast.makeText(this, "Image Saved To :" + file, Toast.LENGTH_SHORT).show();
-            } catch (Exception e){
-                Log.e(TAG,"Failed to Store in db");
+
+                Log.d("APP_DEBUG", "Image saved : " + file.toString());
+                List<ImgStore> imgList = daoSession.loadAll(ImgStore.class);
+
+                for (ImgStore img : imgList) {
+                    Log.d("APP_DEBUG", img.getImgURL());
+                }
+
+
+            } catch (Exception e) {
+                Log.e(TAG, "Failed to Store in db");
                 e.printStackTrace();
             }
 
@@ -387,8 +378,6 @@ public class CameraActivity extends AppCompatActivity implements Runnable {
     }
 
 
-
-
     private void openCamera() {
         CameraManager manager = ( CameraManager ) getSystemService(Context.CAMERA_SERVICE);
         try {
@@ -435,15 +424,15 @@ public class CameraActivity extends AppCompatActivity implements Runnable {
 
 
     }
-    private void closeCamera(){
-        Log.e(TAG,"Closing Camera");
-        if (null != cameraDevice){
+
+    private void closeCamera() {
+        Log.e(TAG, "Closing Camera");
+        if (null != cameraDevice) {
             cameraDevice.close();
             cameraDevice = null;
         }
-       // if (null != imageReader.close())
+        // if (null != imageReader.close())
     }
-
 
 
     private void stopBackgroundThread() {
