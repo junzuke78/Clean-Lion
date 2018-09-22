@@ -20,13 +20,12 @@ import com.example.joelg.lion.db.DaoSession;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GalleryAdapter {
-    public class JobAdapter extends RecyclerView.Adapter<JobAdapter.GalleryHolder> {
+public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.GalleryHolder> {
 
         private ArrayList<ImgStore> ImgList;
 
 
-        public JobAdapter(List<ImgStore> imgList) {
+    public GalleryAdapter(List<ImgStore> imgList) {
 
         }
 
@@ -89,5 +88,5 @@ public class GalleryAdapter {
 
 
     }
-}
+
 

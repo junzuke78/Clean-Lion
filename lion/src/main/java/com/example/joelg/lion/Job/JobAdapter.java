@@ -34,12 +34,12 @@ import java.util.List;
  * ---
  */
 
-public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.MyViewHolder> {
+public class JobAdapter extends RecyclerView.Adapter<JobAdapter.MyViewHolder> {
 
     private List<Task> TaskList;
 
 
-    public GalleryAdapter(List<Task> taskList) {
+    public JobAdapter(List<Task> taskList) {
         TaskList = taskList;
     }
 
