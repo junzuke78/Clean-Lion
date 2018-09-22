@@ -25,7 +25,6 @@ import android.os.HandlerThread;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.Size;
 import android.util.SparseIntArray;
@@ -100,7 +99,6 @@ public class CameraActivity extends AppCompatActivity implements Runnable {
         }
     };
     private ImageButton takePictureButton;
-    private String ImgUrl;
     private Size imageDimension;
     TextureView.SurfaceTextureListener textureListener = new TextureView.SurfaceTextureListener() {
         @Override
@@ -123,12 +121,11 @@ public class CameraActivity extends AppCompatActivity implements Runnable {
     };
     //save file
     private File file;
-    private boolean mFlashSupported;
-    private Handler mBackgroundHandler;
+    private Handler mBackgroundHandler = new Handler();
     private String cameraId;
-    private HandlerThread mBackgroundThread;
     private int CameraWidth = 1440;
     private int CameraHeight = 2960;
+    private HandlerThread mBackgroundThread;
 
     public void run() {
         System.out.println("Thread Running");
@@ -142,11 +139,9 @@ public class CameraActivity extends AppCompatActivity implements Runnable {
         return GeneratedID;
     }
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        HandlerThread handlerThread = new HandlerThread("camera thread");
-        handlerThread.start();
 
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -154,7 +149,6 @@ public class CameraActivity extends AppCompatActivity implements Runnable {
         textureView = findViewById(R.id.texture);
         assert textureView != null;
         textureView.setSurfaceTextureListener(textureListener);
-        //ViewGroup.LayoutParams params = preview.getlayoutParams();
         takePictureButton = findViewById(R.id.CaptureBtn);
         assert takePictureButton != null;
 
@@ -166,8 +160,7 @@ public class CameraActivity extends AppCompatActivity implements Runnable {
                 takePicture();
             }
         });
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+
 
         //################################################
         final ImageButton BackButton = findViewById(R.id.BackCamBtn);
@@ -185,6 +178,7 @@ public class CameraActivity extends AppCompatActivity implements Runnable {
                 }
             }
         });
+
 
 
         //#######################################
@@ -207,9 +201,8 @@ public class CameraActivity extends AppCompatActivity implements Runnable {
         });
     }
 
+
     protected void takePicture() {
-
-
         if (null == cameraDevice) {
             Log.e(TAG, "cameraDevice is null");
             return;
@@ -427,11 +420,14 @@ public class CameraActivity extends AppCompatActivity implements Runnable {
 
     private void closeCamera() {
         Log.e(TAG, "Closing Camera");
+
         if (null != cameraDevice) {
             cameraDevice.close();
             cameraDevice = null;
+            stopBackgroundThread();
+
         }
-        // if (null != imageReader.close())
+
     }
 
 

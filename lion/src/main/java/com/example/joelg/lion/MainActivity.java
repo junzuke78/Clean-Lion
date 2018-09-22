@@ -3,16 +3,13 @@ package com.example.joelg.lion;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.SurfaceTexture;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
 
-import com.example.joelg.lion.Job.Lion;
 import com.example.joelg.lion.JobManager.JobManagerActivity;
-import com.example.joelg.lion.db.DaoSession;
 
 import org.greenrobot.greendao.annotation.NotNull;
 
@@ -22,8 +19,11 @@ public class MainActivity extends AppCompatActivity {
 // menu setup
 private static final int REQUEST_CAMERA_PERMISSION = 200;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.actvity_main);
 
@@ -37,6 +37,8 @@ private static final int REQUEST_CAMERA_PERMISSION = 200;
 
 
     }
+
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NotNull String[] permissions, @NotNull int[] grantResullts) {
         if (requestCode == REQUEST_CAMERA_PERMISSION) {
@@ -46,7 +48,6 @@ private static final int REQUEST_CAMERA_PERMISSION = 200;
             }
         }
     }
-
 
 
     public void NewJob(View view) {

@@ -12,7 +12,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="0dp"
         android:clipToPadding="false"
         android:scrollbars="vertical">
 
@@ -21,7 +20,7 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/Task_header"
         android:layout_width="match_parent"
-        android:layout_height="79dp"
+        android:layout_height="55dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
         android:background="@color/cardview_dark_background"
@@ -31,30 +30,30 @@
 
     <ImageButton
         android:id="@+id/noteBtn"
-        android:layout_width="87dp"
-        android:layout_height="77dp"
+        android:layout_width="55dp"
+        android:layout_height="55dp"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="35dp"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="40dp"
         android:background="@android:color/transparent"
         android:src="@android:drawable/ic_menu_sort_by_size" />
 
     <ImageButton
         android:id="@+id/JobBackBtn"
-        android:layout_width="87dp"
-        android:layout_height="77dp"
+        android:layout_width="55dp"
+        android:layout_height="55dp"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="33dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="40dp"
         android:background="@android:color/transparent"
-        android:visibility="visible"
-        android:src="@android:drawable/ic_menu_revert" />
+        android:src="@android:drawable/ic_menu_revert"
+        android:visibility="visible" />
 
 
     <ImageButton
         android:id="@+id/CameraBtn"
-        android:layout_width="87dp"
-        android:layout_height="77dp"
+        android:layout_width="55dp"
+        android:layout_height="55dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:background="@android:color/transparent"
