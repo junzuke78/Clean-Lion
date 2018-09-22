@@ -15,7 +15,7 @@
         android:orientation="vertical">
 
         <ImageView
-            android:id="@+id/GalleryImg"
+            android:id="@+id/galleryImg"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="4dp"
