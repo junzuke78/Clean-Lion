@@ -11,6 +11,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ImageView;
 
+import com.example.joelg.lion.Job.ImgStore;
 import com.example.joelg.lion.Job.Lion;
 import com.example.joelg.lion.R;
 import com.example.joelg.lion.db.DaoSession;
@@ -20,7 +21,7 @@ import java.util.ArrayList;
 
 public class GalleryActivity extends AppCompatActivity {
 
-    public ArrayList<String> GalleryImage;
+    public ArrayList<ImgStore> GalleryImageList;
     public ImageView galleryImg;
 
     @Override
@@ -29,11 +30,9 @@ public class GalleryActivity extends AppCompatActivity {
         long id;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gallery);
-
-        ImageView GalleryImg = findViewById(R.id.galleryImg);
-
-
         RecyclerView RVG = findViewById(R.id.g_rv);
+        ImageView GalleryImg = findViewById(R.id.galleryImg);
+        
         GridLayoutManager gridLayoutManager = new GridLayoutManager(GalleryActivity.this, 2);
         RVG.setHasFixedSize(true);
         RVG.setLayoutManager(gridLayoutManager);
@@ -42,6 +41,10 @@ public class GalleryActivity extends AppCompatActivity {
         DaoSession daoSession = (( Lion ) imgView.getContext().getApplicationContext()).getDaoSession();
         String tempImg = daoSession.toString();
         Uri imgUri = Uri.parse(tempImg);
+
+        for (ImgStore img : GalleryImageList) {
+            Log.d("APP_DEBUG: ", img.getImgURL());
+        }
         Picasso.get().load(imgUri).centerCrop().into(GalleryImg);
 
         Log.d("DEBUG_LION", "Gallery activated");
