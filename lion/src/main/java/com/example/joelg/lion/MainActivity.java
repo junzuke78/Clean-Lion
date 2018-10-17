@@ -13,8 +13,10 @@ import com.example.joelg.lion.JobManager.JobManagerActivity;
 
 import org.greenrobot.greendao.annotation.NotNull;
 
-public class MainActivity extends AppCompatActivity {
+import java.io.File;
 
+public class MainActivity extends AppCompatActivity {
+public File dir;
 
 // menu setup
 private static final int REQUEST_CAMERA_PERMISSION = 200;
@@ -26,6 +28,17 @@ private static final int REQUEST_CAMERA_PERMISSION = 200;
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.actvity_main);
+
+         File dir = new File("/temp/Lion/images");
+        try {
+            if (dir.mkdir()) {
+                Toast.makeText(this, "dir Created: " + dir, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "dir is not Created: ", Toast.LENGTH_SHORT).show();
+            }
+        }  catch (Exception e){
+            e.printStackTrace();
+        }
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{

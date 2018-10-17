@@ -236,7 +236,7 @@ public class CameraActivity extends AppCompatActivity implements Runnable {
             captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, ORIENTATIONS.get(rotation));
 
 
-            final DaoSession daoSession = (( Lion ) getApplication()).getDaoSession();
+            DaoSession daoSession = (( Lion ) getApplication()).getDaoSession();
             try {
 
 
@@ -244,10 +244,8 @@ public class CameraActivity extends AppCompatActivity implements Runnable {
                 String FilePath = file.toString();
                 daoSession.insert(new ImgStore("", FilePath, ImgTimeStamp, ImgID()));
                 Toast.makeText(this, "Image Saved To :" + file, Toast.LENGTH_SHORT).show();
-
                 Log.d("APP_DEBUG", "Image saved : " + file.toString());
                 List<ImgStore> imgList = daoSession.loadAll(ImgStore.class);
-
                 for (ImgStore img : imgList) {
                     Log.d("APP_DEBUG", img.getImgURL());
                 }
