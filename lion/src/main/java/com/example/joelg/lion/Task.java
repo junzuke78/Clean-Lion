@@ -21,7 +21,6 @@ public class Task {
     @Property(nameInDb = "time")
     private String timeStamp;
 
-
     @Id(autoincrement = true)
     private Long JobId;
 

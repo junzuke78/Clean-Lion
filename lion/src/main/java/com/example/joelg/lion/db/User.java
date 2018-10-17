@@ -1,4 +1,4 @@
-package com.example.joelg.lion;
+package com.example.joelg.lion.db;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;

@@ -2,6 +2,7 @@ package com.example.joelg.lion.Job;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,10 +12,12 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.joelg.lion.Camera.CameraActivity;
+import com.example.joelg.lion.JobManager.JobManagerActivity;
+import com.example.joelg.lion.NotesActivity;
 import com.example.joelg.lion.R;
 import com.example.joelg.lion.Task;
-import com.example.joelg.lion.User;
 import com.example.joelg.lion.db.DaoSession;
+import com.example.joelg.lion.db.User;
 
 import java.util.List;
 
@@ -22,6 +25,9 @@ public class JobActivity extends AppCompatActivity {
 
     public TextView TsView;
     private View.OnClickListener checkBoxListener;
+
+    final Handler JobHandler = new Handler();
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,7 +57,6 @@ public class JobActivity extends AppCompatActivity {
         CameraButton.setOnClickListener(new View.OnClickListener()
 
         {
-
             @Override
             public void onClick(View v) {
                 {
@@ -65,7 +70,6 @@ public class JobActivity extends AppCompatActivity {
             }
         });
 
-
         final ImageButton BackButton = findViewById(R.id.JobBackBtn);
         BackButton.setOnClickListener(new View.OnClickListener()
 
@@ -75,7 +79,21 @@ public class JobActivity extends AppCompatActivity {
             public void onClick(View v) {
                 {
 
+                    Intent intent = new Intent(JobActivity.this, JobManagerActivity.class);
+                    startActivity(intent);
                     finish();
+                }
+
+            }
+        });
+
+        final ImageButton NotesButton = findViewById(R.id.noteBtn);
+        NotesButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                {
+                    Intent intent = new Intent(JobActivity.this, NotesActivity.class);
 
                 }
 

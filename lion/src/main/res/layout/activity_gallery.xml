@@ -5,10 +5,23 @@
     android:layout_height="match_parent"
     tools:context=".Gallery.GalleryActivity">
 
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/g_rv"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+        android:layout_height="match_parent">
+
+
+    </android.support.v7.widget.RecyclerView>
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alignmentMode="alignMargins"
+        android:columnCount="10"
+        android:columnOrderPreserved="true">
+
+    </GridLayout>
 
 
 </android.support.constraint.ConstraintLayout>

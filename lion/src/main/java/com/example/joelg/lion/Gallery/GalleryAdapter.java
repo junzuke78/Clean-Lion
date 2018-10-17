@@ -1,59 +1,39 @@
 package com.example.joelg.lion.Gallery;
 
-import android.content.Intent;
+
+import android.net.Uri;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 
-import com.example.joelg.lion.Job.JobActivity;
+import com.example.joelg.lion.Job.ImgStore;
+import com.example.joelg.lion.Job.Lion;
 import com.example.joelg.lion.R;
+import com.example.joelg.lion.db.DaoSession;
 
-import java.util.List;
+import java.util.ArrayList;
 
+public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.GalleryHolder> {
 
-/**
- * Created by joelg on 5/12/2017.
- */
+    private ArrayList<ImgStore> ImgList;
 
-/**
- * IO -> blocking
- * ---
- * -----
- * ---
- * ---
- * --
- * ---
- */
-
-public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ImageViewHolder> {
-
-    private List<String> ImageList;
-
-    private OnItemClickListener mListener;
-
-    public GalleryAdapter(List<String> imageList) {
-        this.ImageList = imageList;
-    }
-
-    public void setOnItemClickListener(OnItemClickListener listener) {
-        mListener = listener;
-    }
 
     @Override
-    public ImageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public GalleryHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.gallery_card_layout, parent, false);
-        return new ImageViewHolder(itemView);
+                .inflate(R.layout.activity_gallery, parent, false);
 
+        return new GalleryHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(ImageViewHolder holder, int position) {
-
+    public void onBindViewHolder(GalleryHolder holder, int position) {
+        holder.itemView.getResources();
         Log.d("DEBUG_RV", "Attaching items to RV");
 
 
@@ -66,41 +46,30 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ImageVie
 
     @Override
     public int getItemCount() {
-        return ImageList.size();
+        return ImgList.size();
     }
 
-    public interface OnItemClickListener {
-        void onItemClick(int position);
-
-
-    }
-
-    public class ImageViewHolder extends RecyclerView.ViewHolder {
+    public class GalleryHolder extends RecyclerView.ViewHolder {
 
         private Long id;
+        private CheckBox IsDone;
         private CardView cv;
-        private ImageView imgView;
-        private int Time;
-        
+        DaoSession daoSession = (( Lion ) cv.getContext().getApplicationContext()).getDaoSession();
+        String tempImg = daoSession.toString();
+        Uri imgUri = Uri.parse(tempImg);
+        private ImageView ImgView;
 
-        public ImageViewHolder(View view) {
+
+        public GalleryHolder(View view) {
+
+
             super(view);
 
-            cv = itemView.findViewById(R.id.jm_cv);
-
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    final Intent intent;
-                    intent = new Intent(itemView.getContext(), JobActivity.class);
-                    itemView.getContext().startActivity(intent);
-
-                }
-            });
 
         }
 
+
     }
-
-
 }
+
+
