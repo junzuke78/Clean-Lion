@@ -151,6 +151,7 @@ public class CameraActivity extends AppCompatActivity implements Runnable {
         textureView.setSurfaceTextureListener(textureListener);
         takePictureButton = findViewById(R.id.CaptureBtn);
         assert takePictureButton != null;
+        getOutputMediaFile();
 
         ///##############################################
 
@@ -202,6 +203,24 @@ public class CameraActivity extends AppCompatActivity implements Runnable {
     }
 
 
+
+    private static void getOutputMediaFile() {
+        File mediaStorageDir = new File(
+                Environment
+                        .getExternalStorageDirectory(),
+                "Camera");
+        if (!mediaStorageDir.exists()) {
+            if (!mediaStorageDir.mkdirs()) {
+                Log.d("MyCameraApp", "failed to create directory");
+
+            }
+        }
+    }
+
+
+
+
+
     protected void takePicture() {
         if (null == cameraDevice) {
             Log.e(TAG, "cameraDevice is null");
@@ -239,12 +258,9 @@ public class CameraActivity extends AppCompatActivity implements Runnable {
             DaoSession daoSession = (( Lion ) getApplication()).getDaoSession();
             try {
 
-
-                file = new File(Environment.getExternalStorageDirectory() + ImgTimeStamp + ".jpg");
-                String FilePath = file.toString();
+                file = new File(Environment.getExternalStorageDirectory() , "1_.jpg");
+                String FilePath = file.getPath();
                 daoSession.insert(new ImgStore("", FilePath, ImgTimeStamp, ImgID()));
-                Toast.makeText(this, "Image Saved To :" + file, Toast.LENGTH_SHORT).show();
-                Log.d("APP_DEBUG", "Image saved : " + file.toString());
                 List<ImgStore> imgList = daoSession.loadAll(ImgStore.class);
                 for (ImgStore img : imgList) {
                     Log.d("APP_DEBUG", img.getImgURL());
@@ -301,6 +317,8 @@ public class CameraActivity extends AppCompatActivity implements Runnable {
                 public void onCaptureCompleted(@NonNull CameraCaptureSession session, @NonNull CaptureRequest request, @NonNull TotalCaptureResult result) {
                     super.onCaptureCompleted(session, request, result);
                     Toast.makeText(CameraActivity.this, "Saved" + file, Toast.LENGTH_SHORT).show();
+
+
                     createCameraPreview();
 
                 }
