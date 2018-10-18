@@ -7,39 +7,17 @@
     android:background="@color/colorBlack"
     tools:context="com.example.joelg.lion.Camera.CameraActivity">
 
-    <TextureView
-        android:id="@+id/texture"
-        android:layout_width="wrap_content"
-        android:layout_height="382dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="73dp" />
+    <android.support.v7.widget.Toolbar
 
-    <ImageButton
-        android:id="@+id/CaptureBtn"
-        android:layout_width="wrap_content"
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="22dp"
-        android:adjustViewBounds="false"
-        android:background="@drawable/dimshapes"
-        android:elevation="30dp"
-        android:src="@android:drawable/presence_invisible"
-        android:visibility="visible" />
-
-
-
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/Task_header"
-        android:layout_width="match_parent"
-        android:layout_height="55dp"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:background="@color/cardview_dark_background"
-        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
-
+        android:layout_gravity="bottom"
+        android:background="#000000"
+        android:elevation="10dp"
+        app:popupTheme="@style/PopupOverlay" />
 
     <ImageButton
         android:id="@+id/GalleryBtn"
@@ -47,9 +25,11 @@
         android:layout_height="55dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:layout_marginStart="40dp"
-        android:background="@android:color/transparent"
-        android:src="@android:drawable/ic_menu_gallery" />
+        android:layout_marginStart="55dp"
+        android:background="@android:drawable/ic_menu_gallery"
+        android:elevation="10dp"
+        android:scaleType="centerCrop"
+        android:visibility="visible" />
 
     <ImageButton
         android:id="@+id/BackCamBtn"
@@ -57,9 +37,32 @@
         android:layout_height="55dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginEnd="43dp"
+        android:layout_marginEnd="56dp"
         android:background="@android:color/transparent"
-        android:src="@android:drawable/ic_menu_revert"
-        android:visibility="visible" />
+        android:elevation="10dp"
+        android:scaleType="centerCrop"
+        android:src="@android:drawable/ic_menu_revert" />
 
+    <TextureView
+        android:id="@+id/texture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="71dp" />
+
+
+
+    <ImageButton
+        android:id="@+id/CaptureBtn"
+        android:layout_width="95dp"
+        android:layout_height="95dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="18dp"
+        android:adjustViewBounds="false"
+        android:background="@drawable/dimshapes"
+        android:elevation="10dp"
+        android:src="@android:drawable/presence_invisible"
+        android:visibility="visible" />
 </RelativeLayout>

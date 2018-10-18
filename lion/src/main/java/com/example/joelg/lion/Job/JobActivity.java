@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -25,7 +26,7 @@ public class JobActivity extends AppCompatActivity {
 
     public TextView TsView;
     private View.OnClickListener checkBoxListener;
-
+    private Button btnSubmit;
     final Handler JobHandler = new Handler();
 
 
@@ -33,23 +34,21 @@ public class JobActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_job);
-        //    Toolbar HeaderToolbar = (Toolbar) findViewById(R.id.Task_header);
-        //  setSupportActionBar(HeaderToolbar);
         RecyclerView RV = findViewById(R.id.recycler_view);
         LinearLayoutManager LLM = new LinearLayoutManager(this);
+        Button btnSubmit = findViewById(R.id.SubmitBtn);
         RV.setLayoutManager(LLM);
         RV.setHasFixedSize(true);
         TsView = findViewById(R.id.TaskTS);
-
-
-        final DaoSession daoSession = (( Lion ) getApplication()).getDaoSession();
+        btnSubmit.setVisibility(View.GONE);
+        DaoSession daoSession = (( Lion ) getApplication()).getDaoSession();
 
         // Put this in a different thread or use AsyncSession in greenDAO.
         // For Demo purpose, this query is made on main thread but it should  a different thread.
         User user = daoSession.getUserDao().load(1L);
         final List<Task> jobList = (( Lion ) getApplication()).getDaoSession().getTaskDao().loadAll();
         Log.d("DEBUG_RV", "Loaded itms : " + jobList.size());
-        JobAdapter JobAdapter = new JobAdapter(jobList);
+        com.example.joelg.lion.Job.JobAdapter JobAdapter = new com.example.joelg.lion.Job.JobAdapter(jobList);
         RV.setAdapter(JobAdapter);
 
 

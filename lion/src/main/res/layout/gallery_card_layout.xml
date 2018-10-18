@@ -10,7 +10,7 @@
 
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/floatingActionButton"
+        android:id="@+id/ImgChecked"
         android:layout_width="29dp"
         android:layout_height="29dp"
         android:layout_gravity="end"
