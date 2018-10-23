@@ -55,6 +55,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import static com.example.joelg.lion.R.id.GalleryBtn;
 
 public class CameraActivity extends AppCompatActivity implements Runnable {
     private static final String TAG = "AndroidCameraApi";
@@ -71,10 +72,16 @@ public class CameraActivity extends AppCompatActivity implements Runnable {
     protected CameraDevice cameraDevice;
     protected CameraCaptureSession cameraCaptureSessions;
     protected CaptureRequest.Builder captureRequestBuilder;
-    Date currentTime = Calendar.getInstance().getTime();
-    String ImgTimeStamp = currentTime.toString();
+    private Date currentTime = Calendar.getInstance().getTime();
+
+
+
     private TextureView textureView;
     private final CameraDevice.StateCallback stateCallback = new CameraDevice.StateCallback() {
+
+
+
+
         @Override
         public void onOpened(CameraDevice camera) {
             Log.e(TAG, "onOpened");
@@ -134,8 +141,9 @@ public class CameraActivity extends AppCompatActivity implements Runnable {
     private Long ImgID() {
         long upperLimit = 15L;
         long lowerLimit = 0L;
+        long GeneratedID;
 
-        Long GeneratedID = lowerLimit + ( long ) (Math.random() * upperLimit - lowerLimit);
+        GeneratedID = lowerLimit + ( long ) (Math.random() * upperLimit - lowerLimit);
         return GeneratedID;
     }
 
@@ -150,8 +158,8 @@ public class CameraActivity extends AppCompatActivity implements Runnable {
         assert textureView != null;
         textureView.setSurfaceTextureListener(textureListener);
         takePictureButton = findViewById(R.id.CaptureBtn);
+
         assert takePictureButton != null;
-        getOutputMediaFile();
 
         ///##############################################
 
@@ -164,7 +172,7 @@ public class CameraActivity extends AppCompatActivity implements Runnable {
 
 
         //################################################
-        final ImageButton BackButton = findViewById(R.id.BackCamBtn);
+        ImageButton BackButton = findViewById(R.id.BackCamBtn);
         BackButton.setOnClickListener(new View.OnClickListener()
 
         {
@@ -183,7 +191,7 @@ public class CameraActivity extends AppCompatActivity implements Runnable {
 
 
         //#######################################
-        final ImageButton GalleryButton = findViewById(R.id.GalleryBtn);
+         ImageButton GalleryButton = findViewById(GalleryBtn);
         GalleryButton.setOnClickListener(new View.OnClickListener()
 
         {
@@ -201,23 +209,6 @@ public class CameraActivity extends AppCompatActivity implements Runnable {
             }
         });
     }
-
-
-
-    private static void getOutputMediaFile() {
-        File mediaStorageDir = new File(
-                Environment
-                        .getExternalStorageDirectory(),
-                "Camera");
-        if (!mediaStorageDir.exists()) {
-            if (!mediaStorageDir.mkdirs()) {
-                Log.d("MyCameraApp", "failed to create directory");
-
-            }
-        }
-    }
-
-
 
 
 
@@ -250,29 +241,34 @@ public class CameraActivity extends AppCompatActivity implements Runnable {
             captureBuilder.addTarget(reader.getSurface());
             captureBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);
 
+
+
             //check oreintation
             int rotation = getWindowManager().getDefaultDisplay().getRotation();
             captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, ORIENTATIONS.get(rotation));
-
-
             DaoSession daoSession = (( Lion ) getApplication()).getDaoSession();
             try {
 
-                file = new File(Environment.getExternalStorageDirectory() , "1_.jpg");
+                String ImgTimeStamp = currentTime.toString();
+                file = new File(Environment.getExternalStorageDirectory(),".jpg");
                 String FilePath = file.getPath();
                 daoSession.insert(new ImgStore("", FilePath, ImgTimeStamp, ImgID()));
+
                 List<ImgStore> imgList = daoSession.loadAll(ImgStore.class);
                 for (ImgStore img : imgList) {
                     Log.d("APP_DEBUG", img.getImgURL());
+
                 }
-
-
             } catch (Exception e) {
-                Log.e(TAG, "Failed to Store in db");
                 e.printStackTrace();
             }
 
+            HandlerThread handlerThread=new HandlerThread("takepicture");
+            handlerThread.start();
+            mBackgroundHandler = new Handler(handlerThread.getLooper());
             ImageReader.OnImageAvailableListener readerListener = new ImageReader.OnImageAvailableListener() {
+
+
                 @Override
                 public void onImageAvailable(ImageReader imageReader) {
                     Image image = null;
@@ -304,7 +300,6 @@ public class CameraActivity extends AppCompatActivity implements Runnable {
                     } finally {
                         if (outputStream != null)
                             outputStream.close();
-
 
                     }
                 }
@@ -430,7 +425,7 @@ public class CameraActivity extends AppCompatActivity implements Runnable {
     @Override
     protected void onPause() {
         super.onPause();
-
+        closeCamera();
 
     }
 
@@ -452,7 +447,7 @@ public class CameraActivity extends AppCompatActivity implements Runnable {
         try {
             mBackgroundThread.join();
             mBackgroundThread = null;
-            mBackgroundThread = null;
+
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

@@ -12,7 +12,9 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+
 import com.example.joelg.lion.Camera.CameraActivity;
+
 import com.example.joelg.lion.JobManager.JobManagerActivity;
 import com.example.joelg.lion.NotesActivity;
 import com.example.joelg.lion.R;
