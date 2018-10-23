@@ -36,12 +36,19 @@ public class GalleryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gallery);
 
+        DaoSession daoSession = (( Lion ) getApplication()).getDaoSession();
+        List<ImgStore> images = daoSession.getImgStoreDao().loadAll();
+
+
+        Log.d("DEBUG_RV", "Loaded images: " + images.size());
+
         RecyclerView RVG = findViewById(R.id.g_rv);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(GalleryActivity.this, 2);
         RVG.setHasFixedSize(true);
         RVG.setLayoutManager(gridLayoutManager);
-        DaoSession daoSession = (( Lion ) getApplication()).getDaoSession();
-        GalleryAdapter galleryAdapter = new GalleryAdapter(this,GalleryImageList);
+
+        GalleryAdapter galleryAdapter = new GalleryAdapter(getApplicationContext(), images);
+
         RVG.setAdapter(galleryAdapter);
     }
 

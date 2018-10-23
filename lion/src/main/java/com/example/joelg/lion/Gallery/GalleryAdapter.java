@@ -1,6 +1,7 @@
 package com.example.joelg.lion.Gallery;
 
 import android.content.Context;
+import android.media.Image;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.support.v7.widget.CardView;
@@ -47,26 +48,31 @@ import java.util.List;
 public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.GalleryHolder> {
 
 
-    private List<ImgStore> ImageList;
+    private List<ImgStore> imageList;
     private Uri imgUri;
-    private ImageView ImgView;
-    public GalleryAdapter(Context context, ArrayList<ImgStore> imgList) {
+    private Context context;
+
+    public GalleryAdapter(Context context, List<ImgStore> imgList) {
 
 
+        this.context = context;
+        this.imageList = imgList;
+    }
 
-        }
 
     public class GalleryHolder extends RecyclerView.ViewHolder {
         private Long id;
         private CardView cv;
+        private ImageView imageView;
+
         public GalleryHolder(View view) {
 
             super(view);
-            cv = itemView.findViewById(R.id.gallery_cv);
-            ImgView = itemView.findViewById(R.id.galleryImg);
-            DaoSession daoSession = (( Lion ) ImgView.getContext().getApplicationContext()).getDaoSession();
-            String tempImg = daoSession.toString();
-            imgUri = Uri.parse(tempImg);   }
+
+            imageView = itemView.findViewById(R.id.galleryImg);
+
+            //imgUri = Uri.parse(tempImg);
+        }
 
     }
 
@@ -74,15 +80,21 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.GalleryH
     public GalleryHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.gallery_card_layout, parent, false);
-        GalleryHolder  holder = new GalleryHolder(view);
+        GalleryHolder holder = new GalleryHolder(view);
         return holder;
     }
 
     @Override
     public void onBindViewHolder(GalleryHolder holder, int position) {
-        Picasso.get().load(imgUri).centerCrop().into(ImgView);
-        Log.d("DEBUG_RV", imgUri +"Attaching Image to RV");
 
+
+        ImgStore image = imageList.get(position);
+
+        if (image.getImgURL().length() > 0)
+            Picasso.get().load(imageList.get(position).getImgURL()).into(holder.imageView);
+//        Picasso.get().load(image.getImgURL()).centerCrop().into(holder.imageView);
+
+        Log.d("DEBUG_RV : ", image.getImgURL() + " : Attaching Image to RV");
 
     }
 
@@ -92,13 +104,11 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.GalleryH
     }
 
     @Override
-    public int getItemCount()
-    {
-      return ImageList.size();
+    public int getItemCount() {
+        return imageList.size();
     }
 
 
-
-    }
+}
 
 
