@@ -7,18 +7,6 @@
     android:background="@color/colorBlack"
     tools:context="com.example.joelg.lion.Camera.CameraActivity">
 
-    <android.support.v7.widget.Toolbar
-
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_gravity="bottom"
-        android:background="#000000"
-        android:elevation="10dp"
-        app:popupTheme="@style/PopupOverlay" />
-
     <ImageButton
         android:id="@+id/GalleryBtn"
         android:layout_width="55dp"
@@ -44,25 +32,23 @@
         android:src="@android:drawable/ic_menu_revert" />
 
     <TextureView
-        android:id="@+id/texture"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="71dp" />
-
+            android:id="@+id/texture"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+    />
 
 
     <ImageButton
-        android:id="@+id/CaptureBtn"
-        android:layout_width="95dp"
-        android:layout_height="95dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="18dp"
-        android:adjustViewBounds="false"
-        android:background="@drawable/dimshapes"
-        android:elevation="10dp"
-        android:src="@android:drawable/presence_invisible"
-        android:visibility="visible" />
+            android:id="@+id/CaptureBtn"
+            android:layout_width="95dp"
+            android:layout_height="95dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="18dp"
+            android:adjustViewBounds="false"
+            android:background="@drawable/dimshapes"
+            android:elevation="10dp"
+            android:src="@android:drawable/presence_invisible"
+            android:visibility="visible" android:scaleType="fitCenter"/>
 </RelativeLayout>
