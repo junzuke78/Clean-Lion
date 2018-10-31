@@ -49,6 +49,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -72,7 +73,6 @@ public class CameraActivity extends AppCompatActivity implements Runnable {
     protected CameraDevice cameraDevice;
     protected CameraCaptureSession cameraCaptureSessions;
     protected CaptureRequest.Builder captureRequestBuilder;
-    private Date currentTime = Calendar.getInstance().getTime();
 
 
 
@@ -127,11 +127,11 @@ public class CameraActivity extends AppCompatActivity implements Runnable {
         }
     };
     //save file
-    private File file;
+
     private Handler mBackgroundHandler = new Handler();
-    private String cameraId;
-    private int CameraWidth = 1440;
-    private int CameraHeight = 2960;
+    private String cameraId ;
+    private int CameraWidth = 640;
+    private int CameraHeight = 480;
     private HandlerThread mBackgroundThread;
 
     public void run() {
@@ -166,6 +166,7 @@ public class CameraActivity extends AppCompatActivity implements Runnable {
         takePictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 takePicture();
             }
         });
@@ -233,7 +234,7 @@ public class CameraActivity extends AppCompatActivity implements Runnable {
             }
             final ImageReader reader = ImageReader.newInstance(width, height, ImageFormat.JPEG, 10);
 
-            List<Surface> outputSurface = new ArrayList<>(2);
+            List<Surface> outputSurface = new ArrayList<>(10);
             outputSurface.add(reader.getSurface());
             outputSurface.add(new Surface(textureView.getSurfaceTexture()));
 
@@ -246,22 +247,6 @@ public class CameraActivity extends AppCompatActivity implements Runnable {
             //check oreintation
             int rotation = getWindowManager().getDefaultDisplay().getRotation();
             captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, ORIENTATIONS.get(rotation));
-            DaoSession daoSession = (( Lion ) getApplication()).getDaoSession();
-            try {
-
-                String ImgTimeStamp = currentTime.toString();
-                file = new File(Environment.getExternalStorageDirectory(),".jpg");
-                String FilePath = file.getPath();
-                daoSession.insert(new ImgStore("", FilePath, ImgTimeStamp, ImgID()));
-
-                List<ImgStore> imgList = daoSession.loadAll(ImgStore.class);
-                for (ImgStore img : imgList) {
-                    Log.d("APP_DEBUG", img.getImgURL());
-
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
 
             HandlerThread handlerThread=new HandlerThread("takepicture");
             handlerThread.start();
@@ -292,10 +277,12 @@ public class CameraActivity extends AppCompatActivity implements Runnable {
                     }
                 }
 
-                private void save(byte[] bytes) throws IOException {
+                private void save(byte[] bytes) throws IOException
+                {
+                    File file12 = getOutputMediaFile();
                     OutputStream outputStream = null;
                     try {
-                        outputStream = new FileOutputStream(file);
+                        outputStream = new FileOutputStream(file12);
                         outputStream.write(bytes);
                     } finally {
                         if (outputStream != null)
@@ -311,7 +298,7 @@ public class CameraActivity extends AppCompatActivity implements Runnable {
                 @Override
                 public void onCaptureCompleted(@NonNull CameraCaptureSession session, @NonNull CaptureRequest request, @NonNull TotalCaptureResult result) {
                     super.onCaptureCompleted(session, request, result);
-                    Toast.makeText(CameraActivity.this, "Saved" + file, Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(CameraActivity.this, "Saved" + fileNew, Toast.LENGTH_SHORT).show();
 
 
                     createCameraPreview();
@@ -453,8 +440,21 @@ public class CameraActivity extends AppCompatActivity implements Runnable {
         }
     }
 
-
+    private static File getOutputMediaFile(){
+       File mediaStorageDir = new File(Environment.getExternalStorageDirectory(),"Lion");
+       if(!mediaStorageDir.exists()) {
+           if(!mediaStorageDir.mkdirs()){
+               Log.d("Lion","failed to create Dir");
+               return null;
+           }
+       }
+       String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmmss").format(new Date());
+      File mediaFile;
+    mediaFile = new File(mediaStorageDir.getPath() + File.separator + "IMG_ "+ timeStamp + ".jpg");
+    return mediaFile;
 }
+}
+
 
 
 
