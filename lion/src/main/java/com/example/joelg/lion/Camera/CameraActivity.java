@@ -7,14 +7,7 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.ImageFormat;
 import android.graphics.SurfaceTexture;
-import android.hardware.camera2.CameraAccessException;
-import android.hardware.camera2.CameraCaptureSession;
-import android.hardware.camera2.CameraCharacteristics;
-import android.hardware.camera2.CameraDevice;
-import android.hardware.camera2.CameraManager;
-import android.hardware.camera2.CameraMetadata;
-import android.hardware.camera2.CaptureRequest;
-import android.hardware.camera2.TotalCaptureResult;
+import android.hardware.camera2.*;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.Image;
 import android.media.ImageReader;
@@ -33,31 +26,26 @@ import android.view.TextureView;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
-
 import com.example.joelg.lion.Gallery.GalleryActivity;
 import com.example.joelg.lion.Job.ImgStore;
+import com.example.joelg.lion.Job.ImgStoreDao;
 import com.example.joelg.lion.Job.JobActivity;
 import com.example.joelg.lion.Job.Lion;
 import com.example.joelg.lion.R;
 import com.example.joelg.lion.db.DaoSession;
-
 import org.greenrobot.greendao.annotation.NotNull;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.nio.ByteBuffer;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import static com.example.joelg.lion.R.id.GalleryBtn;
 
-public class CameraActivity extends AppCompatActivity implements Runnable {
+public class CameraActivity extends AppCompatActivity {
     private static final String TAG = "AndroidCameraApi";
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
     private static final int REQUEST_CAMERA_PERMISSION = 200;
@@ -72,14 +60,11 @@ public class CameraActivity extends AppCompatActivity implements Runnable {
     protected CameraDevice cameraDevice;
     protected CameraCaptureSession cameraCaptureSessions;
     protected CaptureRequest.Builder captureRequestBuilder;
-    private Date currentTime = Calendar.getInstance().getTime();
 
 
 
     private TextureView textureView;
     private final CameraDevice.StateCallback stateCallback = new CameraDevice.StateCallback() {
-
-
 
 
         @Override
@@ -104,7 +89,10 @@ public class CameraActivity extends AppCompatActivity implements Runnable {
             cameraDevice.close();
             cameraDevice = null;
         }
+
+
     };
+
     private ImageButton takePictureButton;
     private Size imageDimension;
     TextureView.SurfaceTextureListener textureListener = new TextureView.SurfaceTextureListener() {
@@ -127,12 +115,17 @@ public class CameraActivity extends AppCompatActivity implements Runnable {
         }
     };
     //save file
-    private File file;
+
     private Handler mBackgroundHandler = new Handler();
-    private String cameraId;
-    private int CameraWidth = 1440;
-    private int CameraHeight = 2960;
     private HandlerThread mBackgroundThread;
+    private String cameraId ;
+    private int CameraWidth = 640;
+    private int CameraHeight = 480;
+
+
+    private File mediaFile;
+    private ImgStore GallerySave;
+    private String timeStamp;
 
     public void run() {
         System.out.println("Thread Running");
@@ -166,6 +159,7 @@ public class CameraActivity extends AppCompatActivity implements Runnable {
         takePictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 takePicture();
             }
         });
@@ -200,16 +194,14 @@ public class CameraActivity extends AppCompatActivity implements Runnable {
             public void onClick(View v) {
                 {
 
-
-                    //onPause();
                     Intent intent = new Intent(CameraActivity.this, GalleryActivity.class);
                     startActivity(intent);
 
                 }
             }
+
         });
     }
-
 
 
     protected void takePicture() {
@@ -233,7 +225,7 @@ public class CameraActivity extends AppCompatActivity implements Runnable {
             }
             final ImageReader reader = ImageReader.newInstance(width, height, ImageFormat.JPEG, 10);
 
-            List<Surface> outputSurface = new ArrayList<>(2);
+            List<Surface> outputSurface = new ArrayList<>(10);
             outputSurface.add(reader.getSurface());
             outputSurface.add(new Surface(textureView.getSurfaceTexture()));
 
@@ -246,26 +238,8 @@ public class CameraActivity extends AppCompatActivity implements Runnable {
             //check oreintation
             int rotation = getWindowManager().getDefaultDisplay().getRotation();
             captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, ORIENTATIONS.get(rotation));
-            DaoSession daoSession = (( Lion ) getApplication()).getDaoSession();
-            try {
 
-                String ImgTimeStamp = currentTime.toString();
-                file = new File(Environment.getExternalStorageDirectory(),".jpg");
-                String FilePath = file.getPath();
-                daoSession.insert(new ImgStore("", FilePath, ImgTimeStamp, ImgID()));
 
-                List<ImgStore> imgList = daoSession.loadAll(ImgStore.class);
-                for (ImgStore img : imgList) {
-                    Log.d("APP_DEBUG", img.getImgURL());
-
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            HandlerThread handlerThread=new HandlerThread("takepicture");
-            handlerThread.start();
-            mBackgroundHandler = new Handler(handlerThread.getLooper());
             ImageReader.OnImageAvailableListener readerListener = new ImageReader.OnImageAvailableListener() {
 
 
@@ -288,17 +262,23 @@ public class CameraActivity extends AppCompatActivity implements Runnable {
                         {
                             if (image != null)
                                 image.close();
+
                         }
                     }
                 }
 
-                private void save(byte[] bytes) throws IOException {
+                private void save(byte[] bytes) throws IOException
+                {
+                    File imgfile = getOutputMediaFile();
                     OutputStream outputStream = null;
+
                     try {
-                        outputStream = new FileOutputStream(file);
+                        outputStream = new FileOutputStream(imgfile);
                         outputStream.write(bytes);
                     } finally {
+                        DBsave();
                         if (outputStream != null)
+
                             outputStream.close();
 
                     }
@@ -311,7 +291,7 @@ public class CameraActivity extends AppCompatActivity implements Runnable {
                 @Override
                 public void onCaptureCompleted(@NonNull CameraCaptureSession session, @NonNull CaptureRequest request, @NonNull TotalCaptureResult result) {
                     super.onCaptureCompleted(session, request, result);
-                    Toast.makeText(CameraActivity.this, "Saved" + file, Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(CameraActivity.this, "Saved" + fileNew, Toast.LENGTH_SHORT).show();
 
 
                     createCameraPreview();
@@ -413,6 +393,15 @@ public class CameraActivity extends AppCompatActivity implements Runnable {
         }
     }
 
+    protected void startBackgroundThread() {
+        mBackgroundThread = new HandlerThread("Camera Background");
+        mBackgroundThread.start();
+        mBackgroundHandler = new Handler(mBackgroundThread.getLooper());
+
+    }
+
+
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -445,16 +434,40 @@ public class CameraActivity extends AppCompatActivity implements Runnable {
     private void stopBackgroundThread() {
         mBackgroundThread.quitSafely();
         try {
+
             mBackgroundThread.join();
             mBackgroundThread = null;
-
+            mBackgroundHandler = null;
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
 
-
+    private File getOutputMediaFile() {
+       File mediaStorageDir = new File(Environment.getExternalStorageDirectory(),"Lion");
+       if(!mediaStorageDir.exists()) {
+           if(!mediaStorageDir.mkdirs()){
+               Log.d("Lion","failed to create Dir");
+               return null;
+           }
+       }
+        timeStamp = new SimpleDateFormat("ddMMyyyy_HHmmss").format(new Date());
+    mediaFile = new File(mediaStorageDir.getPath() + File.separator + "IMG_ "+ timeStamp + ".jpg");
+    return mediaFile;
 }
+
+    private void DBsave() {
+        DaoSession daoSession = ((Lion) getApplicationContext()).getDaoSession();
+        ImgStoreDao GallerySave = daoSession.getImgStoreDao();
+        ImgStore i = GallerySave.load(ImgID());
+        String tmp = mediaFile.toString();
+        i.setImgURL(tmp);
+        i.setImgTimeStamp(timeStamp);
+
+
+    }
+}
+
 
 
 
